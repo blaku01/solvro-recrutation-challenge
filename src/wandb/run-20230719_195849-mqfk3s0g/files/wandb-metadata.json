@@ -1,0 +1,50 @@
+{
+    "os": "Windows-10-10.0.19045-SP0",
+    "python": "3.11.4",
+    "heartbeatAt": "2023-07-19T17:58:50.138374",
+    "startedAt": "2023-07-19T17:58:49.219549",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "C:\\Repos\\solvro-challenge\\src\\train.py",
+    "codePath": "src\\train.py",
+    "git": {
+        "remote": "git@github.com:blaku01/solvro-challenge.git",
+        "commit": "321a1b4c29891f4863dd72cef7302bdbee42084b"
+    },
+    "email": "gabrielblaczek@gmail.com",
+    "root": "C:/Repos/solvro-challenge",
+    "host": "DESKTOP-UTUEAC0",
+    "username": "blaku",
+    "executable": "C:\\ProgramData\\anaconda3\\envs\\solvro-challenge\\python.exe",
+    "cpu_count": 4,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 3000.0,
+        "min": 0.0,
+        "max": 3000.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3000.0,
+            "min": 0.0,
+            "max": 3000.0
+        }
+    ],
+    "disk": {
+        "total": 476.93847274780273,
+        "used": 249.23333740234375
+    },
+    "gpu": "NVIDIA GeForce GTX 1050 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce GTX 1050 Ti",
+            "memory_total": 4294967296
+        }
+    ],
+    "memory": {
+        "total": 23.948657989501953
+    }
+}

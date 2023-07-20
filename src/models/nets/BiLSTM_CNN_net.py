@@ -52,6 +52,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class BiLSTM_CNN_net(nn.Module):
     def __init__(self, input_size=64, hidden_size=32, num_classes=5):
         super(BiLSTM_CNN_net, self).__init__()
@@ -62,32 +63,37 @@ class BiLSTM_CNN_net(nn.Module):
         self.conv1 = nn.Conv1d(2, 64, kernel_size=8)
         self.conv2 = nn.Conv1d(64, 64, kernel_size=8)
         self.relu = nn.ReLU()
-        self.lstm = nn.LSTM(64, hidden_size, num_layers=3, bidirectional=True, batch_first=True)
-        self.fc1 = nn.Linear(hidden_size * 2, 40)  # Multiply hidden_size by 2 due to bidirectional LSTM
-        self.fc2 = nn.Linear(40, num_classes)  # Multiply hidden_size by 2 due to bidirectional LSTM
-
+        self.lstm = nn.LSTM(
+            64, hidden_size, num_layers=3, bidirectional=True, batch_first=True
+        )
+        self.fc1 = nn.Linear(
+            hidden_size * 2, 40
+        )  # Multiply hidden_size by 2 due to bidirectional LSTM
+        self.fc2 = nn.Linear(
+            40, num_classes
+        )  # Multiply hidden_size by 2 due to bidirectional LSTM
 
     def forward(self, x):
         # Apply the first convolutional layer
         x = self.conv1(x)
-        
+
         # Apply ReLU activation
         x = self.relu(x)
-        
+
         # Apply the second convolutional layer
         x = self.conv2(x)
-        
+
         # Apply ReLU activation
         x = self.relu(x)
-        
+
         # Reshape the tensor for LSTM input
         x = x.permute(0, 2, 1)
-        
+
         # Apply LSTM layer
         outputs, _ = self.lstm(x)
 
         x = outputs[:, -1, :]
-        
+
         # Apply linear layer
         x = self.fc1(x)
 

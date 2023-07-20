@@ -1,6 +1,9 @@
 import numpy as np
 
-def generate_parabolic_trajectory_data(N_samples, trajectory_length=300, a=0.05, b=0.0, c=0.0, max_noise=0.5):
+
+def generate_parabolic_trajectory_data(
+    N_samples, trajectory_length=300, a=0.05, b=0.0, c=0.0, max_noise=0.5
+):
     """
     Generate synthetic 3-dimensional data of shape (N_samples, trajectory_length, 2) with parabolic trajectories.
 
@@ -28,6 +31,7 @@ def generate_parabolic_trajectory_data(N_samples, trajectory_length=300, a=0.05,
 
     return data
 
+
 # Generate 3-dimensional data of shape (N_samples, 300, 2) with parabolic trajectories
 N_samples = 1000  # You can change this number to generate more or fewer samples
 data_parabolic = generate_parabolic_trajectory_data(N_samples)
@@ -36,7 +40,10 @@ print(data_parabolic.shape)  # Output: (N_samples, 300, 2)
 
 import numpy as np
 
-def generate_linear_trajectory_data(N_samples, trajectory_length=300, slope=0.2, intercept=0.0, max_noise=0.5):
+
+def generate_linear_trajectory_data(
+    N_samples, trajectory_length=300, slope=0.2, intercept=0.0, max_noise=0.5
+):
     """
     Generate synthetic 3-dimensional data of shape (N_samples, trajectory_length, 2) with linear trajectories.
 
@@ -62,6 +69,7 @@ def generate_linear_trajectory_data(N_samples, trajectory_length=300, slope=0.2,
         data[i, :, 1] = y_values
 
     return data
+
 
 # Generate 3-dimensional data of shape (N_samples, 300, 2) with linear trajectories
 N_samples = 10000  # You can change this number to generate more or fewer samples
@@ -105,9 +113,9 @@ y_val = y_data_shuffled[train_index:val_index]
 y_test = y_data_shuffled[val_index:]
 
 # Save the datasets as numpy arrays
-np.save('simple_sample_data/X_train_filtered.npy', X_train)
-np.save('simple_sample_data/X_val.npy', X_val)
-np.save('simple_sample_data/X_test.npy', X_test)
-np.save('simple_sample_data/y_train.npy', y_train)
-np.save('simple_sample_data/y_val.npy', y_val)
-np.save('simple_sample_data/y_test.npy', y_test)
+np.save("simple_sample_data/X_train_filtered.npy", X_train)
+np.save("simple_sample_data/X_val.npy", X_val)
+np.save("simple_sample_data/X_test.npy", X_test)
+np.save("simple_sample_data/y_train.npy", y_train)
+np.save("simple_sample_data/y_val.npy", y_val)
+np.save("simple_sample_data/y_test.npy", y_test)

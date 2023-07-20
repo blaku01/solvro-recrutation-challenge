@@ -2,10 +2,13 @@ from typing import Any
 
 import torch
 from pytorch_lightning import LightningModule
+from torch import nn, optim
 from torchmetrics import MaxMetric, MeanMetric
 from torchmetrics.classification.accuracy import Accuracy
-from torch import nn, optim
+
 from configs import TrainConfig
+
+
 class AndiModule(LightningModule):
     def __init__(
         self,
@@ -59,8 +62,12 @@ class AndiModule(LightningModule):
         # update and log metrics
         self.train_loss(loss)
         self.train_acc(preds, targets)
-        self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True)
+        self.log(
+            "train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True
+        )
+        self.log(
+            "train/acc", self.train_acc, on_step=False, on_epoch=True, prog_bar=True
+        )
 
         # return loss or backpropagation will fail
         return loss
@@ -79,7 +86,9 @@ class AndiModule(LightningModule):
         self.val_acc_best(acc)  # update best so far val acc
         # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
         # otherwise metric would be reset by lightning after each epoch
-        self.log("val/acc_best", self.val_acc_best.compute(), sync_dist=True, prog_bar=True)
+        self.log(
+            "val/acc_best", self.val_acc_best.compute(), sync_dist=True, prog_bar=True
+        )
 
     def test_step(self, batch: Any, batch_idx: int):
         _, preds, _ = self.model_step(batch)
@@ -112,9 +121,12 @@ class AndiModule(LightningModule):
     #     return {"optimizer": self.optimizer, "scheduler": self.scheduler, "interval":"epoch"}
     def configure_optimizers(self):
         config = TrainConfig()
-        optimizer = self.optimizer(self.parameters(), lr = config.lr)
-        scheduler = self.scheduler(optimizer,step_size=config.step_size,gamma=config.gamma)
+        optimizer = self.optimizer(self.parameters(), lr=config.lr)
+        scheduler = self.scheduler(
+            optimizer, step_size=config.step_size, gamma=config.gamma
+        )
         return [optimizer], [scheduler]
+
 
 if __name__ == "__main__":
     _ = AndiModule(None, None, None)

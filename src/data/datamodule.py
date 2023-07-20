@@ -1,32 +1,34 @@
-import torch
-import torchvision.transforms as transforms
 import numpy as np
 import pytorch_lightning as pl
-from torch.utils.data import Dataset, DataLoader
+import torch
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader, Dataset
+
 from configs import TrainConfig
+
 
 def augment_with_rotations(data, labels, rotation_angles):
     data = data.permute(0, 2, 1)
 
     augmented_data = [data]
-    
+
     for angle in rotation_angles:
-        rotation_matrix = np.array([
-            [np.cos(angle), -np.sin(angle)],
-            [np.sin(angle), np.cos(angle)]
-        ])
+        rotation_matrix = np.array(
+            [[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]]
+        )
 
         rotated_data = torch.matmul(data, torch.from_numpy(rotation_matrix))
         augmented_data.append(rotated_data)
     concatenated_augmented_data = torch.cat(augmented_data)
-    concatenated_augmented_data = concatenated_augmented_data.permute(0,2,1)
-    return concatenated_augmented_data, np.concatenate([labels for _ in range(len(augmented_data))])
-
+    concatenated_augmented_data = concatenated_augmented_data.permute(0, 2, 1)
+    return concatenated_augmented_data, np.concatenate(
+        [labels for _ in range(len(augmented_data))]
+    )
 
 
 class AndiDataset(Dataset):
     def __init__(self, X, y, rotation_angles=None, transform=None):
-        self.X = X.reshape(-1, X.shape[2], X.shape[1]).astype('double')
+        self.X = X.reshape(-1, X.shape[2], X.shape[1]).astype("double")
         self.y = y
         self.X = torch.tensor(self.X, dtype=torch.float64)
 
@@ -35,7 +37,6 @@ class AndiDataset(Dataset):
 
         if transform is not None:
             self.X = transform(self.X)
-
 
         if self.y is not None:
             self.y = torch.tensor(self.y, dtype=torch.long)
@@ -50,7 +51,7 @@ class AndiDataset(Dataset):
         if self.y is not None:
             return x, self.y[idx]
         return x, None
-    
+
 
 class AndiDataModule(pl.LightningDataModule):
     def __init__(
@@ -68,22 +69,30 @@ class AndiDataModule(pl.LightningDataModule):
 
     def setup(self, stage=None):
         # Load and preprocess data here
-        X_train = np.load(self.data_dir + 'filtered_x_train.npy')
-        y_train = np.load(self.data_dir + 'filtered_y_train.npy')
-        
-        val_data = np.load(self.data_dir + 'filtered_x_val.npy')
-        val_labels = np.load(self.data_dir + 'filtered_y_val.npy')
-        
-        test_data = np.load(self.data_dir + 'X_test.npy')
+        X_train = np.load(self.data_dir + "filtered_x_train.npy")
+        y_train = np.load(self.data_dir + "filtered_y_train.npy")
+
+        val_data = np.load(self.data_dir + "filtered_x_val.npy")
+        val_labels = np.load(self.data_dir + "filtered_y_val.npy")
+
+        test_data = np.load(self.data_dir + "X_test.npy")
         test_labels = None  # No y_test.npy available
-        
+
         # Add Standard scaling transform to the train dataset
-        train_transform = transforms.Compose([
-            transforms.Normalize(mean=self._get_mean(val_data), std=self._get_std(val_data))
-        ])
-        self.train_dataset = AndiDataset(X_train, y_train, transform=train_transform, rotation_angles=[7 * np.pi / 4])
+        train_transform = transforms.Compose(
+            [
+                transforms.Normalize(
+                    mean=self._get_mean(val_data), std=self._get_std(val_data)
+                )
+            ]
+        )
+        self.train_dataset = AndiDataset(
+            X_train, y_train, transform=train_transform, rotation_angles=[7 * np.pi / 4]
+        )
         self.val_dataset = AndiDataset(val_data, val_labels, transform=train_transform)
-        self.test_dataset = AndiDataset(test_data, test_labels, transform=train_transform)
+        self.test_dataset = AndiDataset(
+            test_data, test_labels, transform=train_transform
+        )
 
     def _get_mean(self, data):
         return np.mean(data)
@@ -117,6 +126,7 @@ class AndiDataModule(pl.LightningDataModule):
             pin_memory=self.pin_memory,
             shuffle=False,
         )
+
 
 if __name__ == "__main__":
     _ = AndiDataModule()
